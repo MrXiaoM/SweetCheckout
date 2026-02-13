@@ -3,12 +3,16 @@ package top.mrxiaom.sweet.checkout.map;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.qrcode.QRCode;
 import top.mrxiaom.qrcode.enums.ErrorCorrectionLevel;
+import top.mrxiaom.sweet.checkout.func.IPaymentManager;
 import top.mrxiaom.sweet.checkout.func.PaymentsAndQRCodeManager;
 
 import java.util.Base64;
 
 public interface IMapSource {
-    byte[] generate(PaymentsAndQRCodeManager manager);
+    default byte[] generate(PaymentsAndQRCodeManager manager) {
+        return generate((IPaymentManager) manager);
+    }
+    byte[] generate(IPaymentManager manager);
 
     static IMapSource fromUrl(BukkitPlugin plugin, String url) {
         if (url.startsWith("file:")) {

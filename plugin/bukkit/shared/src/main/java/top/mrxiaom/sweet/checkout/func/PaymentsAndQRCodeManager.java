@@ -26,12 +26,15 @@ import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.qrcode.QRCode;
+import top.mrxiaom.sweet.checkout.Messages;
 import top.mrxiaom.sweet.checkout.PluginCommon;
 import top.mrxiaom.sweet.checkout.func.entry.PaymentInfo;
 import top.mrxiaom.sweet.checkout.func.entry.ShopItem;
 import top.mrxiaom.sweet.checkout.map.IMapSource;
 import top.mrxiaom.sweet.checkout.map.MapQRCode;
 import top.mrxiaom.sweet.checkout.nms.NMS;
+import top.mrxiaom.sweet.checkout.packets.common.IPacket;
+import top.mrxiaom.sweet.checkout.packets.common.IResponsePacket;
 import top.mrxiaom.sweet.checkout.packets.plugin.PacketPluginCancelOrder;
 import top.mrxiaom.sweet.checkout.utils.Utils;
 
@@ -43,7 +46,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 @AutoRegister
-public class PaymentsAndQRCodeManager extends AbstractModule implements Listener {
+public class PaymentsAndQRCodeManager extends AbstractModule implements IPaymentManager, Listener {
     public static final String FLAG_SWEET_CHECKOUT_MAP = "SWEET_CHECKOUT_MAP";
     private static Material filledMap;
 
@@ -100,10 +103,12 @@ public class PaymentsAndQRCodeManager extends AbstractModule implements Listener
         putProcess(player, "deprecated");
     }
 
+    @Override
     public void putProcess(Player player, String tag) {
         processPlayers.put(player.getUniqueId(), tag);
     }
 
+    @Override
     public boolean isProcess(Player player) {
         UUID uuid = player.getUniqueId();
         return processPlayers.containsKey(uuid) || players.containsKey(uuid);
@@ -224,16 +229,26 @@ public class PaymentsAndQRCodeManager extends AbstractModule implements Listener
         }
     }
 
+    @Override
+    public <R extends IResponsePacket> void sendPacket(Player player, IPacket<R> packet, Consumer<R> resp) {
+        if (!PaymentAPI.inst().send(packet, resp)) {
+            Messages.not_connect.tm(player);
+            PaymentsAndQRCodeManager.inst().remove(player);
+        }
+    }
+
     @Deprecated
     public void requireScan(Player player, QRCode code, String orderId, long outdateTime, Consumer<Double> done) {
         requireScan(player, new MapQRCode(code), orderId, outdateTime, done);
     }
 
+    @Override
     public void requireScan(Player player, IMapSource source, String orderId, long outdateTime, Consumer<Double> done) {
         byte[] colors = source.generate(this);
         requireScan(player, colors, orderId, outdateTime, done);
     }
 
+    @Override
     @SuppressWarnings({"deprecation"})
     public void requireScan(Player player, byte[] colors, String orderId, long outdateTime, Consumer<Double> done) {
         ItemStack item = AdventureItemStack.buildItem(filledMap, mapName, mapLore);
@@ -297,6 +312,7 @@ public class PaymentsAndQRCodeManager extends AbstractModule implements Listener
         return payment;
     }
 
+    @Override
     public PaymentInfo remove(Player player) {
         UUID uuid = player.getUniqueId();
         processPlayers.remove(uuid);
@@ -343,18 +359,22 @@ public class PaymentsAndQRCodeManager extends AbstractModule implements Listener
         });
     }
 
+    @Override
     public byte getMapDarkColor() {
         return mapDarkColor;
     }
 
+    @Override
     public byte getMapLightColor() {
         return mapLightColor;
     }
 
+    @Override
     public byte[] getMapDarkPattern() {
         return mapDarkPattern;
     }
 
+    @Override
     public byte[] getMapLightPattern() {
         return mapLightPattern;
     }

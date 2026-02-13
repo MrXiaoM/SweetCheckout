@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.checkout.map;
 
-import top.mrxiaom.sweet.checkout.func.PaymentsAndQRCodeManager;
+import top.mrxiaom.sweet.checkout.PluginCommon;
+import top.mrxiaom.sweet.checkout.func.IPaymentManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,7 +22,7 @@ public class MapByteArray implements IMapSource {
     }
 
     @Override
-    public byte[] generate(PaymentsAndQRCodeManager manager) {
+    public byte[] generate(IPaymentManager manager) {
         try (InputStream input = new ByteArrayInputStream(bytes)) {
             BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = image.createGraphics();
@@ -29,7 +30,7 @@ public class MapByteArray implements IMapSource {
             graphics.dispose();
             return MapConverter.imageToBytes(image);
         } catch (Throwable t) {
-            manager.warn("读取字节流时出现异常", t);
+            PluginCommon.getInstance().warn("读取字节流时出现异常", t);
             byte[] colors = new byte[16384];
             Arrays.fill(colors, manager.getMapLightColor());
             return colors;

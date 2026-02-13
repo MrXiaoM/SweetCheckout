@@ -29,7 +29,6 @@ import top.mrxiaom.sweet.checkout.func.modifier.Modifiers;
 import top.mrxiaom.sweet.checkout.func.modifier.OrderInfo;
 import top.mrxiaom.sweet.checkout.map.IMapSource;
 import top.mrxiaom.sweet.checkout.nms.NMS;
-import top.mrxiaom.sweet.checkout.packets.common.IPacket;
 import top.mrxiaom.sweet.checkout.packets.plugin.PacketPluginRequestOrder;
 import top.mrxiaom.sweet.checkout.utils.NumberRange;
 import top.mrxiaom.sweet.checkout.utils.Utils;
@@ -39,7 +38,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Consumer;
 
 import static top.mrxiaom.sweet.checkout.utils.Utils.*;
 
@@ -99,11 +97,20 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (args.length == 3 && "points".equalsIgnoreCase(args[0]) && player.hasPermission("sweet.checkout.points")) {
-                if (!PaymentAPI.inst().isConnected()) {
-                    return Messages.not_connect.tm(player);
+            if (args.length >= 3 && "points".equalsIgnoreCase(args[0]) && player.hasPermission("sweet.checkout.points")) {
+                Map<String, String> params = collectArgs(args, 3);
+                IPaymentManager manager;
+                if (getBoolean(params, "mock", false)) {
+                    if (!player.isOp()) {
+                        return Messages.no_permission.tm(player);
+                    }
+                    manager = MockPaymentManager.inst();
+                } else {
+                    if (!PaymentAPI.inst().isConnected()) {
+                        return Messages.not_connect.tm(player);
+                    }
+                    manager = PaymentsAndQRCodeManager.inst();
                 }
-                PaymentsAndQRCodeManager manager = PaymentsAndQRCodeManager.inst();
                 String type = args[1];
                 double moneyDouble = Util.parseDouble(args[2]).orElse(0.0);
                 if (!pointsLimitRange.isInRange(moneyDouble)) {
@@ -146,7 +153,8 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 }
                 manager.putProcess(player, "points:" + moneyStr + ":" + type);
                 String productName = random(pointsNames, "商品");
-                return send(player, Messages.commands__points__send.str(), new PacketPluginRequestOrder(
+                Messages.commands__points__send.tm(player);
+                manager.sendPacket(player, new PacketPluginRequestOrder(
                         player.getName(), type, productName, moneyStr, allowIncreasing
                 ), resp -> {
                     String error = resp.getError();
@@ -185,10 +193,21 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                                 Pair.of("%money_round%", (int) Math.round(money)));
                     });
                 });
+                return true;
             }
-            if (args.length == 3 && "buy".equalsIgnoreCase(args[0])) {
-                if (!PaymentAPI.inst().isConnected()) {
-                    return Messages.not_connect.tm(player);
+            if (args.length >= 3 && "buy".equalsIgnoreCase(args[0])) {
+                Map<String, String> params = collectArgs(args, 3);
+                IPaymentManager manager;
+                if (getBoolean(params, "mock", false)) {
+                    if (!player.isOp()) {
+                        return Messages.no_permission.tm(player);
+                    }
+                    manager = MockPaymentManager.inst();
+                } else {
+                    if (!PaymentAPI.inst().isConnected()) {
+                        return Messages.not_connect.tm(player);
+                    }
+                    manager = PaymentsAndQRCodeManager.inst();
                 }
                 String shopId = args[1];
                 ShopItem shop = ShopManager.inst().get(shopId);
@@ -199,7 +218,6 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     ActionProviders.run(plugin, player, shop.limitationDenyActions);
                     return true;
                 }
-                PaymentsAndQRCodeManager manager = PaymentsAndQRCodeManager.inst();
                 String type = args[2];
                 if ("wechat".equalsIgnoreCase(type)) {
                     if (!shop.paymentWeChat) {
@@ -227,7 +245,8 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 }
                 manager.putProcess(player, "buy:" + shop.id + ":" + type);
                 String productName = random(shop.names, "商品");
-                return send(player, Messages.commands__buy__send.str(), new PacketPluginRequestOrder(
+                Messages.commands__buy__send.tm(player);
+                manager.sendPacket(player, new PacketPluginRequestOrder(
                         player.getName(), type, productName, price, allowIncreasing
                 ), resp -> {
                     String error = resp.getError();
@@ -272,6 +291,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         plugin.run(player, shop.rewards);
                     });
                 });
+                return true;
             }
             if (args.length > 1 && "qrcode".equalsIgnoreCase(args[0]) && sender.isOp()) {
                 StringBuilder content = new StringBuilder(args[1]);
@@ -606,14 +626,27 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         return stringList;
     }
 
-    @SuppressWarnings({"rawtypes"})
-    public <T extends IPacket> boolean send(Player player, String msg, IPacket<T> packet, Consumer<T> resp) {
-        t(player, msg);
-        if (!PaymentAPI.inst().send(packet, resp)) {
-            Messages.not_connect.tm(player);
-            PaymentsAndQRCodeManager.inst().remove(player);
+    public static Map<String, String> collectArgs(String[] args, int startIndex) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = startIndex; i < args.length; i++) {
+            String text = args[i];
+            if (text.startsWith("--")) {
+                int j = text.indexOf('=');
+                if (j != -1) {
+                    map.put(text.substring(2, j), text.substring(j + 1));
+                } else {
+                    map.put(text.substring(2), "true");
+                }
+            }
         }
-        return true;
+        return map;
+    }
+
+    public static boolean getBoolean(Map<String, String> params, String key, boolean def) {
+        String text = params.getOrDefault(key, String.valueOf(def));
+        if (text.equals("true") || text.equals("yes")) return true;
+        if (text.equals("false") || text.equals("no")) return false;
+        return def;
     }
 
     public static CommandMain inst() {

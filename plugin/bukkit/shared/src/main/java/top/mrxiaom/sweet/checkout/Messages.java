@@ -14,6 +14,9 @@ public enum Messages implements IHolderAccessor {
 
     market__not_allow("&e不允许上架该商品到全球市场"),
 
+    player__not_online("&e玩家不在线&7 (或不存在)"),
+    player__only("该命令只能由玩家执行"),
+
     commands__reload("&a配置文件已重载"),
     commands__reload_database("&a已重新连接到数据库"),
     commands__points__disabled__wechat("&e管理员已禁用微信支付"),
@@ -139,8 +142,8 @@ public enum Messages implements IHolderAccessor {
             ""),
     commands__help__admin(
             "&e&lSweetCheckout&r &b支付系统",
-            "&f/checkout points <类型> <金额> &7通过微信(wechat)或支付宝(alipay)下单指定金额的点券",
-            "&f/checkout buy <商品ID> <类型> &7通过微信(wechat)或支付宝(alipay)下单指定商品",
+            "&f/checkout points <类型> <金额> [--mock] &7通过微信(wechat)或支付宝(alipay)下单指定金额的点券",
+            "&f/checkout buy <商品ID> <类型> [--mock] &7通过微信(wechat)或支付宝(alipay)下单指定商品",
             "&f/checkout check [玩家] &7查看自己或某人的充值记录",
             "&f/checkout rank &7查看充值排行榜",
             "&f/checkout stats <起始时间> [结束时间] &7查看指定时间段内的交易统计信息",

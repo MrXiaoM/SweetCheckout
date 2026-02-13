@@ -1,7 +1,7 @@
 package top.mrxiaom.sweet.checkout.map;
 
 import top.mrxiaom.qrcode.QRCode;
-import top.mrxiaom.sweet.checkout.func.PaymentsAndQRCodeManager;
+import top.mrxiaom.sweet.checkout.func.IPaymentManager;
 
 import java.util.Arrays;
 
@@ -22,7 +22,7 @@ public class MapQRCode implements IMapSource {
     }
 
     @Override
-    public byte[] generate(PaymentsAndQRCodeManager manager) {
+    public byte[] generate(IPaymentManager manager) {
         int widthAndHeight = code.getModuleCount();
         // 如果二维码放大2倍，都比128还小，那应该缩放2倍显示
         boolean scaling = widthAndHeight * 2 < 128;
