@@ -186,7 +186,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         } else {
                             info("玩家 " + player.getName() + " 通过 " + type + " 支付 ￥" + money + " (实付 ￥" + realMoney + ") 获得了 " + points + " 点券 --" + productName + " " + orderId);
                         }
-                        plugin.getTradeDatabase().log(player, LocalDateTime.now(), type, realMoney, "points:" + points);
+                        if (!orderId.startsWith("MOCK_")) {
+                            plugin.getTradeDatabase().log(player, LocalDateTime.now(), type, realMoney, "points:" + points);
+                        }
                         plugin.run(player, pointsCommands,
                                 Pair.of("%points%", points),
                                 Pair.of("%money%", money),
@@ -279,7 +281,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         } else {
                             info("玩家 " + player.getName() + " 通过 " + type + " 支付 ￥" + money + " (实付 ￥" + realMoney + ") 购买了商品 " + shop.display + " (" + shop.id + ") --" + productName + " " + orderId);
                         }
-                        plugin.getTradeDatabase().log(player, LocalDateTime.now(), type, realMoney, "buy:" + shop.id);
+                        if (!orderId.startsWith("MOCK_")) {
+                            plugin.getTradeDatabase().log(player, LocalDateTime.now(), type, realMoney, "buy:" + shop.id);
+                        }
                         switch (shop.limitationMode) {
                             case GLOBAL:
                                 plugin.getBuyCountDatabase().addGlobalCount(shop, 1);
