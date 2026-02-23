@@ -101,7 +101,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 Map<String, String> params = collectArgs(args, 3);
                 IPaymentManager manager;
                 if (getBoolean(params, "mock", false)) {
-                    if (!player.isOp()) {
+                    if (!player.hasPermission("sweet.checkout.mock")) {
                         return Messages.no_permission.tm(player);
                     }
                     manager = MockPaymentManager.inst();
@@ -201,7 +201,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 Map<String, String> params = collectArgs(args, 3);
                 IPaymentManager manager;
                 if (getBoolean(params, "mock", false)) {
-                    if (!player.isOp()) {
+                    if (!player.hasPermission("sweet.checkout.mock")) {
                         return Messages.no_permission.tm(player);
                     }
                     manager = MockPaymentManager.inst();
