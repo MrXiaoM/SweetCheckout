@@ -22,7 +22,7 @@ public enum MinecraftVersion {
 
     private static MinecraftVersion version;
 
-    private static final Map<String, MinecraftVersion> VERSION_TO_REVISION = new HashMap<>() {
+    private static final Map<String, MinecraftVersion> VERSION_TO_REVISION = new HashMap<String, MinecraftVersion>() {
         {
             this.put("1.20", MC1_20_R1);
             this.put("1.20.1",  MC1_20_R1);

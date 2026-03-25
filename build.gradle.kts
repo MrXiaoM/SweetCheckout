@@ -28,6 +28,7 @@ subprojects {
         }
 
         project.extensions.configure<JavaPluginExtension> {
+            disableAutoTargetJvm()
             withSourcesJar()
             val javaVersion = JavaVersion.toVersion(targetJavaVersion)
             if (JavaVersion.current() < javaVersion) {
