@@ -1,7 +1,6 @@
 package top.mrxiaom.sweet.checkout.nms;
 
 import com.google.common.collect.Iterables;
-import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
@@ -9,16 +8,20 @@ import org.bukkit.map.MapView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.tr7zw.changeme.nbtapi.utils.MinecraftVersion.*;
+import static top.mrxiaom.sweet.checkout.nms.MinecraftVersion.*;
 
 public class NMS {
     private static IMapPacket mapPacket;
     private static boolean loaded;
 
+    public static boolean isUnknownVersion() {
+        return MinecraftVersion.getVersion().equals(UNKNOWN);
+    }
+
     public static boolean init() {
         if (loaded) return true;
         MinecraftVersion version = MinecraftVersion.getVersion();
-        if (version.equals(MC1_21_R7)) {
+        if (version.equals(UNKNOWN) || version.equals(MC1_21_R7)) {
             try {
                 mapPacket = new MapPacket_mojmap_1_21_11();
             } catch (Throwable ignored) {

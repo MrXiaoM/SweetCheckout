@@ -105,6 +105,9 @@ public abstract class PluginCommon extends BukkitPlugin {
         if (!NMS.init()) {
             throw new IllegalStateException("不支持的游戏版本 " + MinecraftVersion.getVersion().name());
         }
+        if (NMS.isUnknownVersion()) {
+            warn("你的服务端版本看起来不受本插件支持，正在尝试使用最后一个支持的版本的实现，如果插件无法正常使用，请报告给插件作者");
+        }
         LanguageManager.inst()
                 .setLangFile("messages.yml")
                 .register(Messages.class, Messages::holder)
