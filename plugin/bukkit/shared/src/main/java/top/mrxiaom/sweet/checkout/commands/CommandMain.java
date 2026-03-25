@@ -78,7 +78,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         pointsLimitRound = Math.max(0, Math.min(2, config.getInt("points.limitation.round", 2)));
         pointsScale = config.getInt("points.scale");
         pointsNames = config.getStringList("points.names");
-        pointsCommands = ActionProviders.loadActions(config.getStringList("points.commands"));
+        pointsCommands = ActionProviders.loadActions(config, "points.commands");
         pointsModifiers = Modifiers.load(config, "points.modifiers");
 
         statsTop = config.getInt("stats.top", 5);

@@ -27,13 +27,14 @@ dependencies {
 }
 tasks {
     shadowJar {
+        configurations.add(project.configurations.runtimeClasspath.get())
         configurations.add(shadowLink)
         val shadowRelocations: Map<String, String> by project.extra
         shadowRelocations.forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
         }
     }
-    val copyTask = create<Copy>("copyBuildArtifact") {
+    val copyTask = this.register<Copy>("copyBuildArtifact") {
         dependsOn(shadowJar)
         from(shadowJar.get().outputs)
         rename { "SweetCheckout-bukkit-ws-$version.jar" }

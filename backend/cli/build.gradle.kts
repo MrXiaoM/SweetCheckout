@@ -40,11 +40,12 @@ fun Jar.setupManifest() {
 }
 tasks {
     shadowJar {
+        configurations.add(project.configurations.runtimeClasspath.get())
         mergeServiceFiles()
         transform(Log4j2PluginsCacheFileTransformer())
         setupManifest()
     }
-    val copyTask = create<Copy>("copyBuildArtifact") {
+    val copyTask = this.register<Copy>("copyBuildArtifact") {
         dependsOn(shadowJar)
         from(shadowJar.get().outputs)
         rename { "backend-$version.jar" }
@@ -53,7 +54,7 @@ tasks {
     build {
         dependsOn(copyTask)
     }
-    create<JavaExec>("runConsole") {
+    this.register<JavaExec>("runConsole") {
         group = "minecraft"
         mainClass.set(entry)
         classpath = sourceSets.main.get().runtimeClasspath

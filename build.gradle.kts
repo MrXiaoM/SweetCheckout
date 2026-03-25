@@ -1,7 +1,7 @@
 import java.util.*
 
 plugins {
-    id("com.gradleup.shadow") version "8.3.0" apply false
+    id("com.gradleup.shadow") version "9.3.0" apply false
     id("com.github.gmazzo.buildconfig") version "5.6.7" apply false
 }
 allprojects {

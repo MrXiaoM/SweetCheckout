@@ -3,7 +3,7 @@ plugins {
 }
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.0")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.12")
 }
 java.withJavadocJar()
 val base = top.mrxiaom.gradle.LibraryHelper(project)
