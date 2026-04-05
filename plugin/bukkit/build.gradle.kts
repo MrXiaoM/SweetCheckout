@@ -1,9 +1,8 @@
 subprojects {
-    val pluginBase = "1.7.13"
+    val pluginBase: String by ext
     fun String.module(module: String): String {
         return "top.mrxiaom.pluginbase:$module:$this"
     }
-    extra["pluginBase"] = pluginBase
     extra["dependencies"] = mapOf(
         "com.github.technicallycoded:FoliaLib:0.4.4" to true,
         pluginBase.module("library") to false,

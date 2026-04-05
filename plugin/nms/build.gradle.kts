@@ -1,4 +1,5 @@
 dependencies {
+    compileOnly("top.mrxiaom.pluginbase:actions:${project.extra["pluginBase"]}")
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     implementation("org.jetbrains:annotations:21.0.0")
     for (proj in subprojects) {

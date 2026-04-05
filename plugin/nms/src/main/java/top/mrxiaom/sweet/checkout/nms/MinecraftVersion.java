@@ -2,6 +2,7 @@ package top.mrxiaom.sweet.checkout.nms;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import top.mrxiaom.pluginbase.utils.Versioning;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ public enum MinecraftVersion {
             this.put("1.21.10", MC1_21_R6);
             this.put("1.21.11", MC1_21_R7);
             this.put("26.1", MC26_1);
+            this.put("26.1.1", MC26_1);
         }
     };
 
@@ -74,7 +76,7 @@ public enum MinecraftVersion {
             final String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
             version = MinecraftVersion.valueOf(ver.replace("v", "MC"));
         } catch (Exception ex) {
-            version = VERSION_TO_REVISION.getOrDefault(Bukkit.getServer().getBukkitVersion().split("-")[0], UNKNOWN);
+            version = VERSION_TO_REVISION.getOrDefault(Versioning.getMinecraftVersion(), UNKNOWN);
         }
         return version;
     }
