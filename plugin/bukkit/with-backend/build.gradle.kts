@@ -7,6 +7,7 @@ plugins {
 java.withJavadocJar()
 val shadowGroup = "top.mrxiaom.sweet.checkout.libs"
 val shadowLink = configurations.create("shadowLink")
+val base: top.mrxiaom.gradle.LibraryHelper by project.extra
 dependencies {
     val dependencies: Map<String, Boolean> by project.extra
     for ((dependency, ignore) in dependencies) {
@@ -18,17 +19,17 @@ dependencies {
     }
     val libraries: List<String> by project.extra
     for (library in libraries) {
-        compileOnly(library)
+        base.library(library)
     }
     val backendDependencies: List<String> by project.extra
     for (dependency in backendDependencies) {
         implementation(dependency)
     }
-    add("shadowLink", project("java9"))
+    add(shadowLink.name, project("java9"))
     implementation(project(":backend:common"))
     implementation(project(":plugin:bukkit:shared"))
     for (dependency in project.project(":plugin:nms").allprojects) {
-        add("shadowLink", dependency)
+        add(shadowLink.name, dependency)
     }
     implementation(project(":packets"))
 }
@@ -75,7 +76,10 @@ tasks {
     processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         from(sourceSets.main.get().resources.srcDirs) {
-            expand(mapOf("version" to version))
+            expand(mapOf(
+                "version" to version,
+                "libraries_config" to base.addedLibrariesYAML.joinToString("\n")
+            ))
             include("plugin.yml")
         }
     }

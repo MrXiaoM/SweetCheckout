@@ -7,8 +7,7 @@ softdepend:
   - SweetPlayerMarket
 authors: [ MrXiaoM ]
 folia-supported: true
-libraries:
-  - "org.jetbrains:annotations:21.0.0"
+# PluginBase Libraries ${libraries_config}
 commands:
   sweetcheckout:
     description: 'The main command of SweetCheckout'

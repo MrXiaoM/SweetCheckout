@@ -1,6 +1,8 @@
 val targetJavaVersion = 8
 
 dependencies {
+    compileOnly("org.jetbrains:annotations:24.0.0")
+
     val dependencies: List<String> by project.extra
     for (dependency in dependencies) {
         compileOnly(dependency)

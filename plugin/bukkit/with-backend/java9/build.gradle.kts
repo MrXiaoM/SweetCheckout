@@ -1,8 +1,8 @@
 val targetJavaVersion = 9
+val base: top.mrxiaom.gradle.LibraryHelper by project.extra
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
-    val pluginBase: String by project.extra
-    compileOnly("top.mrxiaom.pluginbase:library:$pluginBase")
+    compileOnly(base.modules.library)
     compileOnly(project(":plugin:bukkit:shared"))
     compileOnly(project(":plugin:bukkit:with-backend"))
     compileOnly(project(":backend:common"))

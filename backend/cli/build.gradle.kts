@@ -13,6 +13,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1")
     implementation("org.jline:jline-terminal-jansi:3.21.0")
     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+    implementation("org.jetbrains:annotations:24.0.0")
 
     val dependencies: List<String> by project.extra
     for (dependency in dependencies) {

@@ -1,24 +1,23 @@
 subprojects {
-    val pluginBase: String by ext
-    fun String.module(module: String): String {
-        return "top.mrxiaom.pluginbase:$module:$this"
-    }
+    val base: top.mrxiaom.gradle.LibraryHelper by project.extra
     extra["dependencies"] = mapOf(
         "com.github.technicallycoded:FoliaLib:0.4.4" to true,
-        pluginBase.module("library") to false,
-        pluginBase.module("actions") to false,
-        pluginBase.module("l10n") to false,
-        pluginBase.module("temporary-data") to false,
-        pluginBase.module("paper") to false,
-        "top.mrxiaom:LibrariesResolver-Lite:$pluginBase" to false,
+        base.modules.library to false,
+        base.modules.actions to false,
+        base.modules.l10n to false,
+        base.modules.temporaryData to false,
+        base.modules.paper to false,
+        base.resolver.lite to false,
     )
+    val adventureVersion = "4.22.0"
     extra["libraries"] = listOf(
         "top.mrxiaom:qrcode-encoder:1.0.0",
-        "net.kyori:adventure-api:4.22.0",
-        "net.kyori:adventure-platform-bukkit:4.4.0",
-        "net.kyori:adventure-text-minimessage:4.22.0",
-        "com.zaxxer:HikariCP:4.0.3",
-        "top.mrxiaom:EvalEx-j8:3.4.0",
+        "net.kyori:adventure-api:$adventureVersion",
+        "net.kyori:adventure-text-minimessage:$adventureVersion",
+        "net.kyori:adventure-text-serializer-gson:$adventureVersion",
+        "net.kyori:adventure-text-serializer-plain:$adventureVersion",
+        base.depend.HikariCP,
+        base.depend.EvalEx,
     )
     extra["shadowRelocations"] = mapOf(
         "top.mrxiaom.pluginbase" to "base",

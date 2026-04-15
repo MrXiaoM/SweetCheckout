@@ -1,12 +1,8 @@
 plugins {
     id("com.github.gmazzo.buildconfig")
 }
-buildscript {
-    repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.12")
-}
 java.withJavadocJar()
-val base = top.mrxiaom.gradle.LibraryHelper(project)
+val base: top.mrxiaom.gradle.LibraryHelper by project.extra
 dependencies {
     val dependencies: Map<String, Boolean> by project.extra
     for ((dependency, _) in dependencies) {
