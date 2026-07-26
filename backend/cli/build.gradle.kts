@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
-
 plugins {
     id("com.gradleup.shadow")
 }
@@ -8,6 +6,8 @@ val targetJavaVersion = 17
 val entry = "top.mrxiaom.sweet.checkout.backend.ConsoleMain"
 
 dependencies {
+    annotationProcessor("org.apache.logging.log4j:log4j-core:2.23.1")
+
     implementation("org.apache.logging.log4j:log4j-api:2.23.1")
     implementation("org.apache.logging.log4j:log4j-core:2.23.1")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1")
@@ -35,15 +35,17 @@ java {
 fun Jar.setupManifest() {
     manifest {
         attributes(
-            "main-class" to entry
+            "Main-Class" to entry,
+            "Enable-Native-Access" to "ALL-UNNAMED"
         )
     }
 }
 tasks {
     shadowJar {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         configurations.add(project.configurations.runtimeClasspath.get())
         mergeServiceFiles()
-        transform(Log4j2PluginsCacheFileTransformer())
+        transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer::class.java)
         setupManifest()
     }
     val copyTask = this.register<Copy>("copyBuildArtifact") {
@@ -61,6 +63,7 @@ tasks {
         classpath = sourceSets.main.get().runtimeClasspath
         workingDir = File(projectDir, "run").also { it.mkdirs() }
         this.standardInput = System.`in`
+        jvmArgs("--enable-native-access=ALL-UNNAMED")
 
         defaultCharacterEncoding = "UTF-8"
         systemProperties(

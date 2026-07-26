@@ -4,11 +4,14 @@ plugins {
     id("com.gradleup.shadow") version "9.3.0" apply false
     id("com.github.gmazzo.buildconfig") version "5.6.7" apply false
 }
-allprojects {
-    group = "top.mrxiaom.sweet.checkout"
-    version = "1.0.11"
-}
+
+println("Group:   ${rootProject.group}")
+println("Version: ${rootProject.version}")
+
 subprojects {
+    group = rootProject.group
+    version = rootProject.version
+
     if (File(projectDir, "src").exists()) {
         apply(plugin = "java")
         apply(plugin = "maven-publish")
