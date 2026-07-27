@@ -1,6 +1,6 @@
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.29")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.30")
 }
 allprojects {
     val pluginBase = top.mrxiaom.gradle.LibraryHelper(project)
