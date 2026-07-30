@@ -7,7 +7,7 @@ allprojects {
     extra["base"] = pluginBase
     dependencies {
         if (configurations.findByName("implementation") != null) {
-            add("implementation", "de.tr7zw:item-nbt-api:2.15.8-SNAPSHOT")
+            add("implementation", "de.tr7zw:item-nbt-api:2.16.0")
         }
     }
 }
