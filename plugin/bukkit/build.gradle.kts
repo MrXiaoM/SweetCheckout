@@ -9,7 +9,7 @@ subprojects {
         base.modules.paper to false,
         base.resolver.lite to false,
     )
-    val adventureVersion = "4.22.0"
+    val adventureVersion = "4.25.0"
     extra["libraries"] = listOf(
         "top.mrxiaom:qrcode-encoder:1.0.0",
         "net.kyori:adventure-api:$adventureVersion",
