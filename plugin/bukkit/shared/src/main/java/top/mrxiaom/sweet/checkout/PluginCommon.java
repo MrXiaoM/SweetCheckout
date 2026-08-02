@@ -16,7 +16,6 @@ import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.inventory.InventoryFactory;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
-import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.checkout.api.PaymentClient;
 import top.mrxiaom.sweet.checkout.database.BuyCountDatabase;
 import top.mrxiaom.sweet.checkout.database.TradeDatabase;
@@ -43,7 +42,6 @@ public abstract class PluginCommon extends BukkitPlugin {
                 .reconnectDatabaseWhenReloadConfig(false)
                 .scanIgnore("top.mrxiaom.sweet.checkout.libs")
         );
-        scheduler = new FoliaLibScheduler(this);
 
         info("正在检查依赖库状态");
         File librariesDir = ClassLoaderWrapper.isSupportLibraryLoader

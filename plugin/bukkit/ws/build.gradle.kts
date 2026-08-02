@@ -7,13 +7,9 @@ val shadowGroup = "top.mrxiaom.sweet.checkout.libs"
 val base: top.mrxiaom.gradle.LibraryHelper by project.extra
 val shadowLink = configurations.create("shadowLink")
 dependencies {
-    val dependencies: Map<String, Boolean> by project.extra
-    for ((dependency, ignore) in dependencies) {
-        if (ignore) {
-            implementation(dependency) { isTransitive = false }
-        } else {
-            implementation(dependency)
-        }
+    val dependencies: List<String> by project.extra
+    for (dependency in dependencies) {
+        implementation(dependency)
     }
     val libraries: List<String> by project.extra
     for (library in libraries) {

@@ -4,8 +4,8 @@ plugins {
 java.withJavadocJar()
 val base: top.mrxiaom.gradle.LibraryHelper by project.extra
 dependencies {
-    val dependencies: Map<String, Boolean> by project.extra
-    for ((dependency, _) in dependencies) {
+    val dependencies: List<String> by project.extra
+    for (dependency in dependencies) {
         compileOnly(dependency)
     }
     val libraries: List<String> by project.extra
@@ -13,7 +13,7 @@ dependencies {
         base.library(lib)
     }
     base.collectPluginHolders()
-    compileOnly("com.github.MrXiaoM:SweetPlayerMarket:1.0.14")
+    compileOnly("com.github.MrXiaoM:SweetPlayerMarket:1.0.18")
     compileOnly(project(":plugin:nms"))
     compileOnly(project(":packets"))
 }
