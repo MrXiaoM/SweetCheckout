@@ -3,6 +3,7 @@ subprojects {
     val adventureVersion: String by project.extra
     extra["dependencies"] = listOf(
         base.modules.library,
+        base.modules.message,
         base.modules.actions,
         base.modules.l10n,
         base.modules.temporaryData,
